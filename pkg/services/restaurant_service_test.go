@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/NaphatPRM/golang-matching-system/pkg/models"
@@ -85,7 +86,7 @@ func TestRestaurantService_GetNearbyRestaurants(t *testing.T) {
 
 	for i, loc := range locations {
 		service.Register(&models.RegisterRestaurantRequest{
-			Name:     "Restaurant " + string(rune('A'+i)),
+			Name:     fmt.Sprintf("Restaurant %d", i+1),
 			Location: loc,
 		})
 	}

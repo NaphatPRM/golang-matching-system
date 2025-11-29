@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/NaphatPRM/golang-matching-system/pkg/models"
 	"github.com/NaphatPRM/golang-matching-system/pkg/services"
@@ -137,21 +138,27 @@ func (h *RestaurantHandler) GetNearby(w http.ResponseWriter, r *http.Request) {
 	var maxRadius float64 = 5.0 // Default 5km
 
 	if lat != "" && lon != "" {
-		if err := json.Unmarshal([]byte(lat), &location.Latitude); err != nil {
+		latVal, err := strconv.ParseFloat(lat, 64)
+		if err != nil {
 			http.Error(w, "invalid latitude", http.StatusBadRequest)
 			return
 		}
-		if err := json.Unmarshal([]byte(lon), &location.Longitude); err != nil {
+		lonVal, err := strconv.ParseFloat(lon, 64)
+		if err != nil {
 			http.Error(w, "invalid longitude", http.StatusBadRequest)
 			return
 		}
+		location.Latitude = latVal
+		location.Longitude = lonVal
 	}
 
 	if radius != "" {
-		if err := json.Unmarshal([]byte(radius), &maxRadius); err != nil {
+		radiusVal, err := strconv.ParseFloat(radius, 64)
+		if err != nil {
 			http.Error(w, "invalid radius", http.StatusBadRequest)
 			return
 		}
+		maxRadius = radiusVal
 	}
 
 	restaurants := h.service.GetNearbyRestaurants(location, maxRadius)
